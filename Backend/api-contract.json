@@ -1,0 +1,52 @@
+{
+  "project": "CineVerse",
+  "services": [
+    {
+      "name": "auth-service",
+      "storage": "PostgreSQL",
+      "endpoints": [
+        { "method": "POST", "path": "/api/auth/register", "roles": ["PUBLIC"] },
+        { "method": "POST", "path": "/api/auth/login", "roles": ["PUBLIC"] },
+        { "method": "GET", "path": "/api/auth/logout", "roles": ["USER", "THEATRE_OWNER", "ADMIN"] }
+      ]
+    },
+    {
+      "name": "movie-service",
+      "storage": "MongoDB",
+      "endpoints": [
+        { "method": "GET", "path": "/api/movies", "roles": ["USER", "THEATRE_OWNER", "ADMIN"] },
+        { "method": "GET", "path": "/api/movies/{id}", "roles": ["USER", "THEATRE_OWNER", "ADMIN"] },
+        { "method": "POST", "path": "/api/movies", "roles": ["THEATRE_OWNER", "ADMIN"] },
+        { "method": "PUT", "path": "/api/movies/{id}", "roles": ["THEATRE_OWNER", "ADMIN"] },
+        { "method": "DELETE", "path": "/api/movies/{id}", "roles": ["ADMIN"] }
+      ]
+    },
+    {
+      "name": "review-service",
+      "storage": "MongoDB",
+      "endpoints": [
+        { "method": "POST", "path": "/api/reviews", "roles": ["USER", "ADMIN"] },
+        { "method": "GET", "path": "/api/reviews/{movieId}", "roles": ["USER", "THEATRE_OWNER", "ADMIN"] }
+      ]
+    },
+    {
+      "name": "booking-service",
+      "storage": "PostgreSQL + Redis",
+      "endpoints": [
+        { "method": "GET", "path": "/api/theatres", "roles": ["USER", "THEATRE_OWNER", "ADMIN"] },
+        { "method": "GET", "path": "/api/shows", "roles": ["USER", "THEATRE_OWNER", "ADMIN"] },
+        { "method": "GET", "path": "/api/seats/{showId}", "roles": ["USER", "ADMIN"] },
+        { "method": "POST", "path": "/api/seats/lock", "roles": ["USER", "ADMIN"] },
+        { "method": "POST", "path": "/api/bookings", "roles": ["USER", "ADMIN"] },
+        { "method": "GET", "path": "/api/bookings/me", "roles": ["USER", "ADMIN"] }
+      ]
+    },
+    {
+      "name": "notification-service",
+      "storage": "RabbitMQ",
+      "events": [
+        { "name": "BOOKING_CONFIRMED", "queue": "bookingQueue", "dlq": "bookingQueue.dlq" }
+      ]
+    }
+  ]
+}
