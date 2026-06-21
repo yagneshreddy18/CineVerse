@@ -32,7 +32,7 @@ export default function Navbar() {
         {isAuthenticated ? (
           <>
             <span className="role-chip">{ROLE_LABELS[user.role]}</span>
-            <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+            <Button variant="ghost1" onClick={handleLogout}>Logout</Button>
           </>
         ) : (
           <Button onClick={() => navigate("/login")}>Login</Button>
