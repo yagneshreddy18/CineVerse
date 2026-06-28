@@ -57,7 +57,7 @@ export default function Login() {
       <div className="login-visual">
         <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80" alt="Cinema seats" />
         <div>
-          <p>Movie discovery, reviews, shows, and seat booking in one learning project.</p>
+          <p>Movie discovery, reviews, shows, and seat booking in learning project.</p>
         </div>
       </div>
       <form className="auth-panel" onSubmit={submit}>
