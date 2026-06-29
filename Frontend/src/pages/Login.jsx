@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
-import { authApi } from "../services/movieService.js";
+
 import { ROLES } from "../utils/constants.js";
 
 export default function Login() {
@@ -12,9 +12,9 @@ export default function Login() {
   const [mode, setMode] = useState("login");
   const [error, setError] = useState("");
   const [form, setForm] = useState({
-    name: "Student User",
-    email: "user@cineverse.test",
-    password: "password",
+    name: "",
+    email: "",
+    password: "",
     role: ROLES.USER,
   });
 
@@ -37,20 +37,7 @@ export default function Login() {
     }
   }
 
-  function quickLogin(email) {
-    setError("");
-    try {
-      login(email, "password");
-      navigate("/dashboard", { replace: true });
-    } catch (err) {
-      setError(err.message);
-    }
-  }
 
-  function resetDemo() {
-    authApi.resetDemoData();
-    window.location.href = "/login";
-  }
 
   return (
     <section className="login-page">
@@ -95,15 +82,7 @@ export default function Login() {
         <Button type="button" variant="ghost" onClick={() => setMode(mode === "login" ? "register" : "login")}>
           {mode === "login" ? "Need an account?" : "Already registered?"}
         </Button>
-        <div className="quick-logins">
-          <span>Demo accounts</span>
-          <button type="button" onClick={() => quickLogin("user@cineverse.test")}>User</button>
-          <button type="button" onClick={() => quickLogin("owner@cineverse.test")}>Owner</button>
-          <button type="button" onClick={() => quickLogin("admin@cineverse.test")}>Admin</button>
-        </div>
-        <button className="reset-link" type="button" onClick={resetDemo}>
-          Reset demo data
-        </button>
+
       </form>
     </section>
   );

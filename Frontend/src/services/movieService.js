@@ -127,7 +127,7 @@ export const authApi = {
   login(email, password) {
     const db = readDb();
     const user = db.users.find((item) => item.email.toLowerCase() === email.toLowerCase());
-    if (!user || !password) {
+    if (!user || !password || user.password !== password) {
       throw new Error("Invalid credentials");
     }
     const session = { token: createToken(user), user: publicUser(user) };
