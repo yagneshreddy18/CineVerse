@@ -11,13 +11,13 @@ export function AuthProvider({ children }) {
       user: session?.user ?? null,
       token: session?.token ?? null,
       isAuthenticated: Boolean(session?.token),
-      login(email, password) {
-        const nextSession = authApi.login(email, password);
+      async login(email, password) {
+        const nextSession = await authApi.login(email, password);
         setSession(nextSession);
         return nextSession;
       },
-      register(payload) {
-        const nextSession = authApi.register(payload);
+      async register(payload) {
+        const nextSession = await authApi.register(payload);
         setSession(nextSession);
         return nextSession;
       },

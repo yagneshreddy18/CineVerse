@@ -1,4 +1,4 @@
-import { DEMO_USERS, SEAT_LOCK_MS } from "../utils/constants.js";
+import { SEAT_LOCK_MS } from "../utils/constants.js";
 import { bookedSeats, movies, reviews, shows, theatres } from "../utils/seedData.js";
 
 const DB_KEY = "cineverse-db-v1";
@@ -124,37 +124,35 @@ export const authApi = {
     const stored = localStorage.getItem(SESSION_KEY);
     return stored ? JSON.parse(stored) : null;
   },
-  login(email, password) {
-    const db = readDb();
-    const user = db.users.find((item) => item.email.toLowerCase() === email.toLowerCase());
-    if (!user || !password || user.password !== password) {
-      throw new Error("Invalid credentials");
+  async login(email, password) {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Invalid credentials');
     }
-    const session = { token: createToken(user), user: publicUser(user) };
+    const session = { token: data.token, user: data.user };
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     return session;
   },
-  register({ name, email, password, role }) {
-    const db = readDb();
-    if (db.users.some((item) => item.email.toLowerCase() === email.toLowerCase())) {
-      throw new Error("Email already registered");
+  async register({ name, email, password, role }) {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, role }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Registration failed');
     }
-    const user = {
-      id: `u-${Date.now()}`,
-      name,
-      email,
-      password,
-      role,
-    };
-    db.users.push(user);
-    writeDb(db);
-    return this.login(email, password);
+    const session = { token: data.token, user: data.user };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    return session;
   },
   logout() {
-    localStorage.removeItem(SESSION_KEY);
-  },
-  resetDemoData() {
-    localStorage.setItem(DB_KEY, JSON.stringify(initialDb()));
     localStorage.removeItem(SESSION_KEY);
   },
 };

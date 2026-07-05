@@ -18,22 +18,27 @@ export default function Login() {
     role: ROLES.USER,
   });
 
+  const [loading, setLoading] = useState(false);
+
   function updateField(event) {
     setForm({ ...form, [event.target.name]: event.target.value });
   }
 
-  function submit(event) {
+  async function submit(event) {
     event.preventDefault();
     setError("");
+    setLoading(true);
     try {
       if (mode === "login") {
-        login(form.email, form.password);
+        await login(form.email, form.password);
       } else {
-        register(form);
+        await register(form);
       }
       navigate(location.state?.from || "/dashboard", { replace: true });
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -78,7 +83,7 @@ export default function Login() {
           </label>
         )}
         {error && <p className="error">{error}</p>}
-        <Button type="submit">{mode === "login" ? "Login" : "Register"}</Button>
+        <Button type="submit" disabled={loading}>{loading ? "Please wait..." : mode === "login" ? "Login" : "Register"}</Button>
         <Button type="button" variant="ghost" onClick={() => setMode(mode === "login" ? "register" : "login")}>
           {mode === "login" ? "Need an account?" : "Already registered?"}
         </Button>
