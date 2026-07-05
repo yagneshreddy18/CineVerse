@@ -18,4 +18,4 @@ contract.services.forEach((service) => {
   assert.ok(service.endpoints || service.events, `${service.name} has no endpoints/events`);
 });
 
-console.log("  Backend contract verified.");
+console.log("Backend contract verified.");
